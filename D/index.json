@@ -1,0 +1,85 @@
+[
+{
+	"uri": "//localhost:1313/",
+	"title": "Terraform - Ansible",
+	"tags": [],
+	"description": "",
+	"content": "Sử dụng Terraform kết hợp Ansible deploy webapp Tổng quan Trong bài lab này, chúng ta sẽ tìm hiểu các khái niệm và các cách để thực hiện triển khai một ứng dụng cơ bản bằng cách sử dụng Terraform kết hợp với Ansible\nContent Introductio222n Preparation Connect to EC2 instance Manage session logs Port Forwarding Clean up resources "
+},
+{
+	"uri": "//localhost:1313/1-introduce/",
+	"title": "Introductions",
+	"tags": [],
+	"description": "",
+	"content": "Terraform và Ansible là hai công cụ mạnh mẽ và phổ biến được sử dụng để tự động hóa quy trình triển khai hạ tầng và ứng dụng.\nTerraform\nTerraform là một công cụ Infrastructure as Code (IaC) do HashiCorp phát triển, cho phép người dùng định nghĩa, xem trước và áp dụng các thay đổi hạ tầng trên nhiều nhà cung cấp dịch vụ đám mây khác nhau như AWS, Azure, Google Cloud Platform, và nhiều hơn nữa. Terraform sử dụng một ngôn ngữ khai báo có tên là HashiCorp Configuration Language (HCL) để mô tả hạ tầng dưới dạng mã.\nBằng cách sử dụng Terraform, chúng ta có thể tự động hóa việc tạo và quản lý các tài nguyên hạ tầng như máy ảo, mạng, bộ nhớ, và các dịch vụ khác, giúp đảm bảo rằng môi trường hạ tầng luôn nhất quán và có thể tái tạo được.\nAnsible\nAnsible là một công cụ tự động hóa mã nguồn mở do Red Hat phát triển, được sử dụng để cấu hình hệ thống, triển khai phần mềm và điều phối các tác vụ khác trên hạ tầng CNTT.\nAnsible hoạt động theo mô hình \u0026ldquo;agentless\u0026rdquo; (không cần cài đặt agent trên các máy chủ đích) và sử dụng SSH để kết nối và thực thi các tác vụ trên máy chủ từ xa.\nVới Ansible, chúng ta có thể tự động hóa việc cài đặt và cấu hình phần mềm, triển khai ứng dụng và thực hiện các tác vụ quản lý hệ thống khác thông qua các playbook - các tệp YAML mô tả các tác vụ cần thực hiện.\n"
+},
+{
+	"uri": "//localhost:1313/2-prerequiste/2.1-installpackage/2.1.1-createiamuser/",
+	"title": "Prepare AWS Env",
+	"tags": [],
+	"description": "",
+	"content": " Go to IAM management console or Find in search bar IAM. Click IAM. Click Users from left bar. Drag the mouse down. Click Select to select AMI Microsoft Windows Server 2019 Base. AmazonEC2FullAccess, AmazonVPCFullAccess, IAMFullAccess, AmazonS3FullAccess,CloudWatchFullAccess. On the Step 2: Choose an Instance Type page. Click on Instance type t2.micro. Click Next: Configure Instance Details. At Step 3: Configure Instance Details page In the Network section, select Lab VPC. In the Subnet section, select Lab Private Subnet. At Auto-assign Public IP select Use subnet setting (Disable) Click Next: Add Storage. Click Next: Add Tags to move to the next step. Click Next: Configure Security Group to move to the next step. On page Step 6: Configure Security Group. Select Select an existing security group. Select security group SG Private Windows Instance. Click Review and Launch. The warning dialog box appears because we do not configure the firewall to allow connections to port 22, Click Continue to continue.\nAt page Step 7: Review Instance Launch.\nClick Launch. In the Select an existing key pair or create a new key pair dialog box. Click Choose an existing key pair. In the Key pair name section, select LabKeypair. Click I acknowledge that I have access to the corresponding private key file, and that without this file, I won\u0026rsquo;t be able to log into my instance.. Click Launch Instances to create EC2 server. Click View Instances to return to the list of EC2 instances.\nClick the edit icon under the Name column.\nIn the Edit Name dialog box, enter Private Windows Instance. Click Save. Next, we will proceed to create IAM Roles to serve the Session Manager.\n"
+},
+{
+	"uri": "//localhost:1313/2-prerequiste/2.1-installpackage/",
+	"title": "Preparing Tool &amp; Environment",
+	"tags": [],
+	"description": "",
+	"content": "In this step, we will need to create a VPC with 2 public / private subnets. Then create 1 EC2 Instance Linux located in the public subnet, 1 EC2 Instance Windows located in the private subnet.\nThe architecture overview after you complete this step will be as follows:\nTo learn how to create EC2 instances and VPCs with public/private subnets, you can refer to the lab:\nAbout Amazon EC2 Works with Amazon VPC Content Create VPC Create Public Subnet Create Private Subnet Create security group Create public Linux server Create private Windows server "
+},
+{
+	"uri": "//localhost:1313/2-prerequiste/2.2-createiamrole/",
+	"title": "Create IAM Role",
+	"tags": [],
+	"description": "",
+	"content": "Create IAM Role In this step, we will proceed to create IAM Role. In this IAM Role, the policy AmazonSSMManagedInstanceCore will be assigned, this is the policy that allows the EC2 server to communicate with the Session Manager.\nGo to IAM service administration interface In the left navigation bar, click Roles. Click Create role. Click AWS service and click EC2. Click Next: Permissions. In the Search box, enter AmazonSSMManagedInstanceCore and press Enter to search for this policy. Click the policy AmazonSSMManagedInstanceCore. Click Next: Tags. Click Next: Review. Name the Role SSM-Role in Role Name Click Create Role . Next, we will make the connection to the EC2 servers we created with Session Manager.\n"
+},
+{
+	"uri": "//localhost:1313/2-prerequiste/2.1-installpackage/2.1.2-installterraform/",
+	"title": "Install Terraform",
+	"tags": [],
+	"description": "",
+	"content": "Cài đặt Terraform trên Windows Bước 1: Cài đặt Chocolatey Nếu bạn chưa cài đặt Chocolatey, hãy làm theo các bước sau:\nMở PowerShell với quyền Quản trị:\nTìm kiếm \u0026ldquo;PowerShell\u0026rdquo; trong menu Start, nhấp chuột phải và chọn \u0026ldquo;Run as Administrator\u0026rdquo;. Cài đặt Chocolatey:\nSao chép và dán lệnh sau vào PowerShell và nhấn Enter: powershell Copy code\nSet-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))\nChờ cho quá trình cài đặt hoàn tất.\nBước 2: Cài đặt Terraform bằng Chocolatey Cài đặt Terraform:\nMở PowerShell với quyền Quản trị (nếu chưa mở). Chạy lệnh sau để cài đặt Terraform:\nchoco install terraform -y\nBước 3: Sau khi quá trình cài đặt hoàn tất, bạn có thể kiểm tra phiên bản Terraform đã được cài đặt bằng lệnh:\nterraform --version\nNếu Terraform đã được cài đặt thành công, bạn sẽ thấy phiên bản của Terraform hiển thị trong PowerShell.\n"
+},
+{
+	"uri": "//localhost:1313/2-prerequiste/",
+	"title": "Preparation ",
+	"tags": [],
+	"description": "",
+	"content": "\rYou need to create 1 Linux instance on the public subnet and 1 Window instance on the private subnet to perform this lab.\nTo learn how to create EC2 instances and VPCs with public/private subnets, you can refer to the lab:\nAbout Amazon EC2 Works with Amazon VPC In order to use System Manager to manage our window instances in particular and our instances in general on AWS, we need to give permission to our instances to be able to work with System Manager. In this preparation, we will also proceed to create an IAM Role to grant permissions to instances that can work with System Manager.\nContent Prepare VPC and EC2 Create IAM Role "
+},
+{
+	"uri": "//localhost:1313/3-deploy/",
+	"title": "Preparation ",
+	"tags": [],
+	"description": "",
+	"content": "\rYou need to create 1 Linux instance on the public subnet and 1 Window instance on the private subnet to perform this lab.\nTo learn how to create EC2 instances and VPCs with public/private subnets, you can refer to the lab:\nAbout Amazon EC2 Works with Amazon VPC In order to use System Manager to manage our window instances in particular and our instances in general on AWS, we need to give permission to our instances to be able to work with System Manager. In this preparation, we will also proceed to create an IAM Role to grant permissions to instances that can work with System Manager.\nContent Prepare VPC and EC2 Create IAM Role "
+},
+{
+	"uri": "//localhost:1313/2-prerequiste/2.1-installpackage/2.1.3-installansible/",
+	"title": "Install Ansible",
+	"tags": [],
+	"description": "",
+	"content": "Cài đặt Ansible trên Windows Bước 1: Cài đặt Chocolatey (nếu chưa cài đặt) Mở PowerShell với quyền Quản trị (Run as Administrator):\nNhấn phím Windows, tìm \u0026ldquo;PowerShell\u0026rdquo;, nhấp chuột phải và chọn \u0026ldquo;Run as Administrator\u0026rdquo;. Cài đặt Chocolatey:\nSao chép và dán lệnh sau vào PowerShell và nhấn Enter:\nSet-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))\nBước 2: Cài đặt Ansible bằng Chocolatey\nMở lại PowerShell với quyền Quản trị (nếu chưa mở).\nCài đặt Ansible bằng cách chạy lệnh sau trong PowerShell:\nchoco install ansible -y\nBước 3: Kiểm tra cài đặt Ansible Sau khi cài đặt xong, kiểm tra xem Ansible đã được cài đặt thành công hay chưa bằng cách chạy lệnh sau trong PowerShell:\nansible --version\n"
+},
+{
+	"uri": "//localhost:1313/4-cleanup/",
+	"title": "Clean up resources",
+	"tags": [],
+	"description": "",
+	"content": "We will take the following steps to delete the resources we created in this exercise.\nDelete EC2 instance Go to EC2 service management console\nClick Instances. Select both Public Linux Instance and Private Windows Instance instances. Click Instance state. Click Terminate instance, then click Terminate to confirm. Go to IAM service management console\nClick Roles. In the search box, enter SSM. Click to select SSM-Role. Click Delete, then enter the role name SSM-Role and click Delete to delete the role. Click Users. Click on user Portfwd. Click Delete, then enter the user name Portfwd and click Delete to delete the user. Delete S3 bucket Access System Manager - Session Manager service management console.\nClick the Preferences tab. Click Edit. Scroll down. In the section S3 logging. Uncheck Enable to disable logging. Scroll down. Click Save. Go to S3 service management console\nClick on the S3 bucket we created for this lab. (Example: lab-fcj-bucket-0001 ) Click Empty. Enter permanently delete, then click Empty to proceed to delete the object in the bucket. Click Exit. After deleting all objects in the bucket, click Delete\nEnter the name of the S3 bucket, then click Delete bucket to proceed with deleting the S3 bucket. Delete VPC Endpoints Go to VPC service management console Click Endpoints. Select the 4 endpoints we created for the lab including SSM, SSMMESSAGES, EC2MESSAGES, S3GW. Click Actions. Click Delete VPC endpoints. In the confirm box, enter delete.\nClick Delete to proceed with deleting endpoints. Click the refresh icon, check that all endpoints have been deleted before proceeding to the next step.\nDelete VPC Go to VPC service management console\nClick Your VPCs. Click on Lab VPC. Click Actions. Click Delete VPC. In the confirm box, enter delete to confirm, click Delete to delete Lab VPC and related resources.\n"
+},
+{
+	"uri": "//localhost:1313/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "//localhost:1313/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]
