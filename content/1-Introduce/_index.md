@@ -1,9 +1,9 @@
 ---
-title : "Introductions"
-date :  "`r Sys.Date()`" 
-weight : 1 
-chapter : false
-pre : " <b> 1. </b> "
+title: "Giới thiệu"
+date: "`r Sys.Date()`"
+weight: 1
+chapter: false
+pre: " <b> 1. </b> "
 ---
 
 **Terraform** và **Ansible** là hai công cụ mạnh mẽ và phổ biến được sử dụng để tự động hóa quy trình triển khai hạ tầng và ứng dụng.

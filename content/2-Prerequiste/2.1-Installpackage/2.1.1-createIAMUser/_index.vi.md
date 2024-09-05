@@ -1,63 +1,66 @@
 ---
-title : "Tạo Private Windows EC2"
-date :  "`r Sys.Date()`" 
-weight : 1
-chapter : false
-pre : " <b> 2.1.1 </b> "
+title: "Prepare AWS Env"
+date: "`r Sys.Date()`"
+weight: 1
+chapter: false
+pre: " <b> 2.1.1 </b> "
 ---
 
-1. Truy cập [giao diện quản trị dịch vụ EC2](https://console.aws.amazon.com/ec2/v2/home)
-  + Click **Instances**.
-  + Click **Launch instances**.
-  
-2. Tại trang **Step 1: Choose an Amazon Machine Image (AMI)**.
-  + Kéo chuột xuống phía dưới.
-  + Click **Select** để lựa chọn AMI **Microsoft Windows Server 2019 Base**.
-  
-![EC2](/images/2.prerequisite/034-createec2.png)
+1. Go to [IAM management console](https://console.aws.amazon.com/iam)
+   or
 
-3. Tại trang **Step 2: Choose an Instance Type**.
- + Click chọn Instance type **t2.micro**.
- + Click **Next: Configure Instance Details**.
- 
-![EC2](/images/2.prerequisite/029-createec2.png)
+- Find in search bar **IAM**.
+- Click **IAM**.
+  ![IAM](/images/2.prerequisite/createuseriam1.png)
 
-4. Tại trang **Step 3: Configure Instance Details**
-  + Tại mục **Network** chọn **Lab VPC**.
-  + Tại mục **Subnet** chọn **Lab Private Subnet**.
-  + Tại mục **Auto-assign Public IP** chọn **Use subnet setting (Disable)**
-  + Click **Next: Add Storage**.
+2. Click **Users** from left bar.
 
-![EC2](/images/2.prerequisite/035-createec2.png)
+- Create new user IAM with name
+- Attach permission: `AmazonEC2FullAccess, AmazonVPCFullAccess, IAMFullAccess, AmazonS3FullAccess,CloudWatchFullAccess.`
+  ![IAM](/images/2.prerequisite/createuseriam2.png)
+  ![IAM](/images/2.prerequisite/createuseriam3.png)
 
-5. Click **Next: Add Tags** để chuyển sang bước kế tiếp.
-  + Click **Next: Configure Security Group** để chuyển sang bước kế tiếp.
+3. Click to user was created.
 
+- Click **Sercurity credential**.
+- Click **Create new access key**.
+- Save it and add to AWS CLI
 
-6. Tại trang **Step 6: Configure Security Group**.
-  + Chọn **Select an existing security group**.
-  + Chọn security group **SG Private Windows Instance**.
-  + Click **Review and Launch**.
+![IAM](/images/2.prerequisite/createuseriam4.png)
 
-![EC2](/images/2.prerequisite/036-createec2.png)
+4. Configure AWS CLI
 
-7. Hộp thoại cảnh báo hiện lên vì chúng ta không cấu hình tường lửa cho phép kết nối vào port 22, Click **Continue** để tiếp tục.
+- Download the AWS CLI Installer
 
-8. Tại trang **Step 7: Review Instance Launch**.
-  + Click **Launch**.
+Visit the [AWS CLI](https://aws.amazon.com/cli/) official download page.
 
-9. Tại hộp thoại **Select an existing key pair or create a new key pair**.
-  + Click chọn **Choose an existing key pair**.
-  + Tại mục **Key pair name** chọn **LabKeypair**.
-  + Click chọn **I acknowledge that I have access to the corresponding private key file, and that without this file, I won't be able to log into my instance.**.
-  + Click **Launch Instances** để tạo máy chủ EC2.
+Under "Windows", click on the "MSI installer" link to download the installer file.
 
-10. Click **View Instances** để quay lại danh mục EC2 instances.
+- Run the Installer
 
-11. Click vào biểu tượng edit dưới cột **Name**.
-  + Tại hộp thoại **Edit Name** điền **Private Windows Instance**.
-  + Click **Save**.
+Locate the downloaded .msi file (usually in your "Downloads" folder).
+Double-click the file to run the installer.
 
-![EC2](/images/2.prerequisite/033-createec2.png)
+- Follow the Installation Instructions
 
-Tiếp theo chúng ta sẽ tiến hành tạo các IAM Role để phục vụ cho Session Manager.
+The installation wizard will guide you through the setup process. Click "Next" to proceed with the default settings.
+Accept the license agreement and continue by clicking "Next".
+Choose the installation folder or leave it as the default. Click "Next".
+Click "Install" to begin the installation.
+After the installation is complete, click "Finish" to close the installer.
+
+- Verify the Installation
+
+Open the Command Prompt or PowerShell.
+Type aws --version and press Enter.
+You should see the AWS CLI version information, indicating that the installation was successful.
+
+- Configure the AWS CLI
+
+To configure the AWS CLI, run the following command in your Command Prompt or PowerShell:
+
+`aws configure`
+
+- Input AWS Access Key ID & AWS Secret Access Key
+
+![IAM](/images/2.prerequisite/createuseriam5.png)

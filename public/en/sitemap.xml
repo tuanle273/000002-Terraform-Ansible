@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>//localhost:1313/</loc>
-    <lastmod>1970-01-01T07:33:42+07:00</lastmod>
+    <lastmod>1970-01-01T08:33:41+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="vi"
@@ -13,30 +13,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="//localhost:1313/"
-                />
-  </url><url>
-    <loc>//localhost:1313/2-prerequiste/2.1-installpackage/2.1.1-installterraform/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="vi"
-                href="//localhost:1313/vi/2-prerequiste/2.1-installpackage/2.1.1-installterraform/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/2-prerequiste/2.1-installpackage/2.1.1-installterraform/"
-                />
-  </url><url>
-    <loc>//localhost:1313/1-introduce/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="vi"
-                href="//localhost:1313/vi/1-introduce/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/1-introduce/"
                 />
   </url><url>
     <loc>//localhost:1313/2-prerequiste/2.1-installpackage/</loc>
@@ -51,28 +27,28 @@
                 href="//localhost:1313/2-prerequiste/2.1-installpackage/"
                 />
   </url><url>
-    <loc>//localhost:1313/2-prerequiste/2.2-createiamrole/</loc>
+    <loc>//localhost:1313/1-introduce/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="vi"
-                href="//localhost:1313/vi/2-prerequiste/2.2-createiamrole/"
+                href="//localhost:1313/vi/1-introduce/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="//localhost:1313/2-prerequiste/2.2-createiamrole/"
+                href="//localhost:1313/1-introduce/"
                 />
   </url><url>
-    <loc>//localhost:1313/2-prerequiste/2.1-installpackage/2.1.2-installansible/</loc>
+    <loc>//localhost:1313/2-prerequiste/2.1-installpackage/2.1.1-createiamuser/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="vi"
-                href="//localhost:1313/vi/2-prerequiste/2.1-installpackage/2.1.2-installansible/"
+                href="//localhost:1313/vi/2-prerequiste/2.1-installpackage/2.1.1-createiamuser/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="//localhost:1313/2-prerequiste/2.1-installpackage/2.1.2-installansible/"
+                href="//localhost:1313/2-prerequiste/2.1-installpackage/2.1.1-createiamuser/"
                 />
   </url><url>
     <loc>//localhost:1313/2-prerequiste/</loc>
@@ -87,6 +63,18 @@
                 href="//localhost:1313/2-prerequiste/"
                 />
   </url><url>
+    <loc>//localhost:1313/2-prerequiste/2.1-installpackage/2.1.2-installterraform/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="//localhost:1313/vi/2-prerequiste/2.1-installpackage/2.1.2-installterraform/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="//localhost:1313/2-prerequiste/2.1-installpackage/2.1.2-installterraform/"
+                />
+  </url><url>
     <loc>//localhost:1313/3-deploy/</loc>
     <xhtml:link
                 rel="alternate"
@@ -99,8 +87,20 @@
                 href="//localhost:1313/3-deploy/"
                 />
   </url><url>
+    <loc>//localhost:1313/2-prerequiste/2.1-installpackage/2.1.3-installansible/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="//localhost:1313/vi/2-prerequiste/2.1-installpackage/2.1.3-installansible/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="//localhost:1313/2-prerequiste/2.1-installpackage/2.1.3-installansible/"
+                />
+  </url><url>
     <loc>//localhost:1313/4-cleanup/</loc>
-    <lastmod>1970-01-01T07:33:42+07:00</lastmod>
+    <lastmod>1970-01-01T08:33:41+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="vi"
@@ -110,18 +110,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="//localhost:1313/4-cleanup/"
-                />
-  </url><url>
-    <loc>//localhost:1313/2-prerequiste/2.1-installpackage/2.1.6-createiamuser/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="vi"
-                href="//localhost:1313/vi/2-prerequiste/2.1-installpackage/2.1.6-createiamuser/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/2-prerequiste/2.1-installpackage/2.1.6-createiamuser/"
                 />
   </url><url>
     <loc>//localhost:1313/categories/</loc>

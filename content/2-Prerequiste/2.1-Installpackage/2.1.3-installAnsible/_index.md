@@ -1,5 +1,5 @@
 ---
-title : "Install Ansible"
+title : "Cài đặt Ansible"
 date : "`r Sys.Date()`"
 weight : 3
 chapter : false

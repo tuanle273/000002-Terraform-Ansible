@@ -1,21 +1,138 @@
 ---
-title : "Deploy "
-date : "`r Sys.Date()`"
-weight : 3
-chapter : false
-pre : " <b> 3. </b> "
+title: "Triển khai ứng dụng"
+date: "`r Sys.Date()`"
+weight: 2
+chapter: false
+pre: " <b> 3. </b> "
 ---
 
-{{% notice info %}}
-You need to create 1 Linux instance on the public subnet and 1 Window instance on the private subnet to perform this lab.
-{{% /notice %}}
+1. Chuẩn bị file cài đặt cơ bản:
 
-To learn how to create EC2 instances and VPCs with public/private subnets, you can refer to the lab:
-  - [About Amazon EC2](https://000004.awsstudygroup.com/en/)
-  - [Works with Amazon VPC](https://000003.awsstudygroup.com/en/)
+`terraform init`
 
-In order to use System Manager to manage our window instances in particular and our instances in general on AWS, we need to give permission to our instances to be able to work with System Manager. In this preparation, we will also proceed to create an IAM Role to grant permissions to instances that can work with System Manager.
+2. main.tf với nội dung:
 
-### Content
-  - [Prepare VPC and EC2](2.1-createec2/)
-  - [Create IAM Role](2.2-createiamrole/)
+```yaml
+provider "aws" {
+region = "ap-southeast-1"
+}
+
+resource "tls_private_key" "key" {
+algorithm = "RSA"
+}
+
+resource "aws_key_pair" "key_pair" {
+key_name   = "ansible-key"
+public_key = tls_private_key.key.public_key_openssh
+}
+
+resource "local_sensitive_file" "private_key" {
+filename        = "${path.module}/ansible.pem"
+content         = tls_private_key.key.private_key_pem
+file_permission = "0400"
+}
+
+resource "aws_security_group" "allow_ssh" {
+ingress {
+from_port   = 22
+to_port     = 22
+protocol    = "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+
+ingress {
+from_port   = 80
+to_port     = 80
+protocol    = "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+
+egress {
+from_port   = 0
+to_port     = 0
+protocol    = "-1"
+cidr_blocks = ["0.0.0.0/0"]
+}
+}
+
+
+resource "aws_instance" "ansible_server" {
+ami                    = "ami-0d07675d294f17973"
+instance_type          = "t2.micro"
+vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+key_name               = aws_key_pair.key_pair.key_name
+
+provisioner "remote-exec" {
+inline = [
+"sudo yum update -y",
+"sudo yum install -y software-properties-common",
+"sudo yum-add-repository --yes --update ppa:ansible/ansible",
+"sudo yum install -y ansible"
+]
+
+connection {
+type        = "ssh"
+user        = "ec2-user"
+private_key = tls_private_key.key.private_key_pem
+host        = self.public_ip
+}
+}
+provisioner "local-exec" {
+command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user --key-file ansible.pem -T 300 -i '${self.public_ip},', playbook.yaml"
+}
+
+
+tags = {
+Name = "Nginx Server"
+}
+}
+```
+
+3. Thêm file playbook.yaml với nội dung:
+
+```yaml
+- name: Install and Configure Nginx
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+      # Sử dụng 'apt' nếu hệ thống của bạn là Debian/Ubuntu
+      # apt:
+      #   name: nginx
+      #   state: present
+      when: ansible_os_family == "RedHat"
+    - name: Ensure /var/www/html directory exists
+      file:
+        path: /usr/share/nginx/html
+        state: directory
+        mode: "0755"
+
+    - name: Add index page
+      template:
+        src: index.html
+        dest: /usr/share/nginx/html/index.html
+
+    - name: Start and enable Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: true
+```
+
+4. Chạy câu lệnh dưới đây để tạo resource EC2 và triển khai web đơn giản bằng ansible
+
+```command
+terraform plan
+
+terraform apply
+```
+
+![terraform](/images/2.prerequisite/terraform1.png)
+
+5. Vào IP public của EC2, web đã được triển khai thành công
+
+![terraform](/images/2.prerequisite/terraform2.png)
+![terraform](/images/2.prerequisite/terraform3.png)
